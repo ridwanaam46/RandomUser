@@ -1,0 +1,201 @@
+
+
+<!DOCTYPE html>
+<html>
+    <head>
+
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reactstrap/4.8.0/reactstrap.min.js">
+<style type="text/css">
+body {
+    font-family:'Encode Sans Expanded', sans-serif;
+}
+
+#root{
+    text-align:center;
+}
+
+.usersTicketsContainer{
+    
+}
+
+.ticketsList{
+    list-style:none;
+    padding:0;
+}
+
+.userContainer{
+    border:2px solid blue;
+    background:lightgrey;
+}
+
+.picContainer{
+    border:1px solid red;
+    border-radius:50%;
+}
+
+.infoContainer{
+    border:1px solid black;
+}
+
+.avatarContainer{
+    
+}
+
+.controlsContainer{
+    
+}
+
+.displayDataContainer{
+    font-size:20px;
+    margin:10px 0 10px 0;
+}
+
+.iconsContainer{
+    display:flex;
+    justify-content:space-around;
+}
+
+
+.fa{
+    font-size:40px;
+}
+
+.iconsContainer li:active{
+    color:blue;
+}
+
+.selected{
+    color:green;
+
+}
+.col-img{
+margin-left: 30%;
+}
+.col-nama{
+text-align:left;
+margin-left: 3%;
+}.col-button{
+  float:right;
+  margin-left:20%;
+}.table{
+  width: 50%;
+}button{
+  float: right;
+  margin-left:1%;
+}
+</style>
+
+
+        <title>React-Random User Generator</title>
+        <!--
+        author: Burey
+        date: 30/09/2017
+        libraries/tools used: React.js, axios, Font-Awesome, Random User API
+        description: React.js app which uses https://randomuser.me API to fetch and display random user information (RandomUserTicket)
+        feel free to mess around with the CSS to change the stylings
+        -->
+        <script crossorigin src="https://unpkg.com/react@16/umd/react.development.js"></script>
+<script crossorigin src="https://unpkg.com/react-dom@16/umd/react-dom.development.js"></script>
+
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/redux/3.7.1/redux.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/react-redux/5.0.5/react-redux.js"></script>
+        <script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
+        <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+        <script src="https://unpkg.com/react-google-charts@1.4.0/umd/react-google-charts.min.js"></script>
+        <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
+        <link href="https://fonts.googleapis.com/css?family=Encode+Sans+Expanded" rel="stylesheet">
+
+    </head>
+    <body>
+    <div id="root"></div>
+    <script  type="text/babel">
+   
+   class App extends React.Component {
+  state = {
+    users: [],
+    isLoading: true,
+    errors: null
+  };
+
+  getUsers() {
+    axios
+      .get("https://randomuser.me/api/?results=3")
+      .then(response =>
+        response.data.results.map(user => ({
+          name: `${user.name.first} ${user.name.last}`,
+          username: `${user.login.username}`,
+          email: `${user.email}`,
+          image: `${user.picture.thumbnail}`
+        }))
+      )
+      .then(users => {
+        this.setState({
+          users,
+          isLoading: false
+        });
+      })
+      .catch(error => this.setState({ error, isLoading: false }));
+  }
+
+  componentDidMount() {
+    this.getUsers();
+  }
+
+  render() {
+    const { isLoading, users } = this.state;
+    return (
+      <React.Fragment>
+        <h2>Random User</h2>
+        <div>
+          {!isLoading ? (
+            users.map(user => {
+              const { username, name, email, image } = user;
+              return (
+               
+                <div key={username}>
+                  <center>
+               <table class="table">
+               <tbody>
+                
+               <tr>
+                  <td><img src={image} alt={name} /></td>
+                  
+                
+                  <td><p class="col-nama">{name}</p></td>
+
+                
+                  <td>
+                  <button class="btn btn-danger" color="danger">Delete</button>
+                  <button color="primary" class="btn btn-primary">Edit</button>
+                  </td>
+                     
+                            
+                </tr>
+               
+       
+                
+               
+               </tbody>
+                </table>
+
+                </center>
+                  </div>
+             
+                
+              );
+            })
+          ) : (
+            <p>Loading...</p>
+          )}
+        </div>
+      </React.Fragment>
+    );
+  }
+}
+
+
+ReactDOM.render(<App />, document.getElementById("root"));
+     </script>
+    </body>
+</html>
